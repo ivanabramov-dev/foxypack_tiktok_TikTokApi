@@ -1,0 +1,26 @@
+[project]
+name = "foxypack_tiktok_TikTokApi"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "ivanabramov-dev", email = "ivan.abramov@1win.vision"},
+]
+dependencies = ["foxypack>=0.0.11", "TikTokApi>=7.3.2", "playwright>=1.58.0", "foxy-entities>=0.0.3"]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.urls]
+repository = "https://github.com/ivanabramov-dev/foxypack_tiktok_TikTokApi"
+
+[tool.pdm]
+distribution = false
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.13.3",
+    "mypy>=1.19.0"
+]
+test = [
+    "pytest>=9.0.2",
+]
