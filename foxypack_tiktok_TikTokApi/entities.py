@@ -1,5 +1,7 @@
 from foxy_entities import SocialMediaEntity
 
 
-class TikTokToken(SocialMediaEntity):
+class TikTokSession(SocialMediaEntity):
     ms_token: str
+    browser: str
+    # proxy: str

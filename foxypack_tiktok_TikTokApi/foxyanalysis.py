@@ -20,22 +20,23 @@ class FoxyTikTokAnalysis(FoxyAnalysis):
         parsed = urllib.parse.urlparse(link)
         path = parsed.path.rstrip('/')
         
-
-        if re.match(r'@[\w\.-]+/video/(\d{18,21})', path) or re.match(r'/(t|v)/[\w]+', path):
+        if re.match(r'/video/\d+', path):
             return TikTokEnum.video.value
 
-        if re.match(r'^/@[\w\.-]+/?$', path):
+        if re.match(r'@[^/]+$', path):
             return TikTokEnum.profile.value
 
         return None
 
     @staticmethod
     def get_code(link: str) -> str:
-        return ''
+        parsed = urllib.parse.urlparse(link)
+        return parsed.path.replace('@', '').replace('/', '')
 
     @override
     def get_analysis(self, url: str) -> TikTokAnswersAnalysis:
         type_content = self.get_type_content(url)
+
         if type_content is None:
             raise DenialAnalyticsException(url)
 
