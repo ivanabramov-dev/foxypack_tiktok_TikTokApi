@@ -127,16 +127,16 @@ class FoxyTikTokStat(FoxyStat):
 
         tik_tok_session = self._get_account()
 
-        if analysis.type_content == "profile":
-            async with TikTokApi() as api:
-                await api.create_sessions(
-                    ms_tokens=[tik_tok_session.ms_token],
-                    num_sessions=1,
-                    sleep_after=3,
-                    browser=tik_tok_session.browser,
-                    # proxies=[tik_tok_session.proxy] if tik_tok_session.proxy else None,
-                )
-                
+        async with TikTokApi() as api:
+            await api.create_sessions(
+                ms_tokens=[tik_tok_session.ms_token],
+                num_sessions=1,
+                sleep_after=3,
+                browser=tik_tok_session.browser,
+                proxies=[tik_tok_session.proxy.to_dict()] if tik_tok_session.proxy else None,
+            )
+
+            if analysis.type_content == "profile":                  
                 profile = api.user(
                     analysis.code
                 )
@@ -144,17 +144,8 @@ class FoxyTikTokStat(FoxyStat):
                 data = await profile.info()
 
                 return self._parse_tiktok_profile(analysis, data)
-            
-        if analysis.type_content == "video":
-            async with TikTokApi() as api:
-                await api.create_sessions(
-                    ms_tokens=[tik_tok_session.ms_token],
-                    num_sessions=1,
-                    sleep_after=3,
-                    browser=tik_tok_session.browser,
-                    # proxies=[tik_tok_session.proxy] if tik_tok_session.proxy else None,
-                )
                 
+            if analysis.type_content == "video":
                 video = api.video(
                     url=analysis.url
                 )
