@@ -1,12 +1,12 @@
 from foxypack import AnswersAnalysis
-
+from pydantic import BaseModel
 from foxypack_tiktok_TikTokApi.answers import TikTokAnswersAnalysis
 
 
-class Proxy:
-    server : str
-    username : str | None
-    password : str | None
+class Proxy(BaseModel):
+    server: str
+    username: str | None = None
+    password: str | None = None
 
     def to_dict(self) -> dict:
         
