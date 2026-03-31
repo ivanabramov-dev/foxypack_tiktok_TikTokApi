@@ -17,13 +17,11 @@ class FoxyTikTokAnalysis(FoxyAnalysis):
 
     @staticmethod
     def get_type_content(link: str) -> str | None:
-        parsed = urllib.parse.urlparse(link)
-        path = parsed.path.rstrip('/')
         
-        if re.match(r'/video/\d+', path):
+        if re.match(r"^https?://(www\.)?tiktok\.com/@[\w\.\-]+/video/\d+/?$", link):
             return TikTokEnum.video.value
 
-        if re.match(r'@[^/]+$', path):
+        if re.match(r"^https?://(www\.)?tiktok\.com/@[\w\.\-]+/?$", link):
             return TikTokEnum.profile.value
 
         return None
