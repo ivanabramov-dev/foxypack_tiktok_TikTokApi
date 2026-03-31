@@ -19,14 +19,9 @@ from foxypack_tiktok_TikTokApi.entities import TikTokSession
 from foxypack_tiktok_TikTokApi.utils import as_tiktok_analysis
 
 from TikTokApi import TikTokApi
-# from proxyproviders.models.proxy import Proxy
-# from proxyproviders import ProxyProvider
 
-
-# ProxyProvider()
 
 TikTokStatistics = Union[TikTokProfileAnswersStatistics, TikTokVideoAnswersStatistics]
-
 
 
 class FoxyTikTokStat(FoxyStat):
@@ -51,17 +46,14 @@ class FoxyTikTokStat(FoxyStat):
 
     @staticmethod
     def _parse_tiktok_video(
-        analysis: AnswersAnalysis,
-        data: dict
-        ) -> TikTokVideoAnswersStatistics:
+        analysis: AnswersAnalysis, data: dict
+    ) -> TikTokVideoAnswersStatistics:
         video_id = data.get("id")
         description = data.get("desc")
 
         create_time = data.get("createTime")
         publish_date = (
-            datetime.fromtimestamp(int(create_time)).date()
-            if create_time
-            else None
+            datetime.fromtimestamp(int(create_time)).date() if create_time else None
         )
 
         stats = data.get("stats", {})
@@ -81,12 +73,10 @@ class FoxyTikTokStat(FoxyStat):
             title=title,
             views=views,
             publish_date=publish_date,
-            analysis_status=analysis, 
-
+            analysis_status=analysis,
             video_id=str(video_id),
             description=description,
             original=original,
-
             likes=likes,
             shares=shares,
             comments=comments,
@@ -95,9 +85,8 @@ class FoxyTikTokStat(FoxyStat):
 
     @staticmethod
     def _parse_tiktok_profile(
-        analysis: AnswersAnalysis,
-        data: dict
-        ) -> TikTokProfileAnswersStatistics:
+        analysis: AnswersAnalysis, data: dict
+    ) -> TikTokProfileAnswersStatistics:
         user_info = data.get("userInfo", {})
         user = user_info.get("user", {})
         stats = user_info.get("stats", {})
@@ -108,14 +97,11 @@ class FoxyTikTokStat(FoxyStat):
             subscribers=stats.get("followerCount", 0),
             creation_date=None,
             analysis_status=analysis,
-
             profile_id=user.get("id", ""),
             verified=user.get("verified"),
-
             folowing=stats.get("followingCount"),
             videos=stats.get("videoCount"),
             friends=stats.get("friendCount"),
-
             description=user.get("signature"),
         )
 
@@ -133,22 +119,20 @@ class FoxyTikTokStat(FoxyStat):
                 num_sessions=1,
                 sleep_after=3,
                 browser=tik_tok_session.browser,
-                proxies=[tik_tok_session.proxy.to_dict()] if tik_tok_session.proxy else None,
+                proxies=[tik_tok_session.proxy.to_dict()]
+                if tik_tok_session.proxy
+                else None,
             )
 
-            if analysis.type_content == "profile":                  
-                profile = api.user(
-                    analysis.code
-                )
-                
+            if analysis.type_content == "profile":
+                profile = api.user(analysis.code)
+
                 data = await profile.info()
 
                 return self._parse_tiktok_profile(analysis, data)
-                
+
             if analysis.type_content == "video":
-                video = api.video(
-                    url=analysis.url
-                )
+                video = api.video(url=analysis.url)
 
                 data = await video.info()
 
